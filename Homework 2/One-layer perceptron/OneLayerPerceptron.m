@@ -1,6 +1,6 @@
 clear all;close all;clc
 
-% Load input data
+% Load data
 trainingSet = load('training_set.csv');
 validationSet = load('validation_set.csv');
 
