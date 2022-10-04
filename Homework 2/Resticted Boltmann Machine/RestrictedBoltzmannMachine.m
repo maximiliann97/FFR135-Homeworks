@@ -17,10 +17,10 @@ x = ...
 nPatterns = height(x);
 
 % Initialize variables
-N = 3;
-nHiddenNeurons = [1 2 4 8];
-eta = 0.005;
-Pdata = [1/4 1/4 1/4 1/4 0 0 0 0];
+N = 3; %Number of visual neurons
+nHiddenNeurons = [1 2 4 8]; % Number of hidden neurons
+eta = 0.01; %Learning rate
+Pdata = [1/4 1/4 1/4 1/4 0 0 0 0]; %Probability data
 DKL_sum = zeros(1,length(nHiddenNeurons));
 ubDKL = zeros(1,length(nHiddenNeurons));
 
@@ -30,7 +30,7 @@ minibatchSize = 40;
 k = 500;
 N_out = 3000;
 N_in = 2000;
-numberOfRuns = 3;
+numberOfRuns = 5;
 
 for run = 1:numberOfRuns  
     index = 1;
@@ -41,6 +41,15 @@ for run = 1:numberOfRuns
         theta_v = zeros(N,1);
         theta_h = zeros(M,1);
         w = normrnd(0,1, [N M]);
+
+        % Set diagonal elements to 0
+        for i = 1:M
+            for j = 1:N
+                if i == j
+                    w(i,j) = 0;
+                end
+            end
+        end
     
     
         for trial = 1:nTrials
