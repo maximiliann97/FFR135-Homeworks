@@ -27,7 +27,7 @@ ubDKL = zeros(1,length(nHiddenNeurons));
 % Iteration variables
 nTrials = 1000;
 minibatchSize = 40;
-k = 500;
+k = 2000;
 N_out = 3000;
 N_in = 2000;
 numberOfRuns = 3;
