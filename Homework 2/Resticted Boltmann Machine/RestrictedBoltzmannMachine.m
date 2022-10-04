@@ -19,18 +19,18 @@ nPatterns = height(x);
 % Initialize variables
 N = 3; %Number of visual neurons
 nHiddenNeurons = [1 2 4 8]; % Number of hidden neurons
-eta = 0.01; %Learning rate
+eta = 0.002; %Learning rate
 Pdata = [1/4 1/4 1/4 1/4 0 0 0 0]; %Probability data
 DKL_sum = zeros(1,length(nHiddenNeurons));
 ubDKL = zeros(1,length(nHiddenNeurons));
 
 % Iteration variables
-nTrials = 500;
+nTrials = 1000;
 minibatchSize = 40;
 k = 500;
 N_out = 3000;
 N_in = 2000;
-numberOfRuns = 5;
+numberOfRuns = 3;
 
 for run = 1:numberOfRuns  
     index = 1;
