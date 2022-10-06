@@ -1,6 +1,6 @@
 %Maximilian Salén
 %19970105-1576
-%Last Updated: 2022-10-03
+%Last Updated: 2022-10-04
 clear all
 close all
 clc
@@ -27,7 +27,7 @@ ubDKL = zeros(1,length(nHiddenNeurons));
 % Iteration variables
 nTrials = 1000;
 minibatchSize = 40;
-k = 2000;
+k = 500;
 N_out = 3000;
 N_in = 2000;
 numberOfRuns = 3;
@@ -89,7 +89,7 @@ for run = 1:numberOfRuns
         
         P_B = zeros(1,nPatterns);
         for i = 1:N_out
-            indexPattern = randi(nPatterns);
+            indexPattern = randi(nPatterns); % Select a random pattern
             V = x(indexPattern,:);
             b_h = w'*V' - theta_h;
             h = Stochastic(b_h,M);
