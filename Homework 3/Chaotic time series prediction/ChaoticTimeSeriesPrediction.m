@@ -32,6 +32,7 @@ O_i = LocalField(w_out,r);
 
 % Prediction
 tTest = length(xTest);
+r = zeros(nReservoirNeurons,1);
 
 for t = 1:tTest
     r = tanh(LocalField(w,r) + LocalField(w_in,xTest(:,t)));
