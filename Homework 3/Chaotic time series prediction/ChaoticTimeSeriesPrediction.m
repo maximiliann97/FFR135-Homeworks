@@ -1,6 +1,6 @@
 % Maximilian Salén
 % 19970105-1576
-% Last updated: 2022-10-13
+% Last updated: 2022-10-14
 clear all
 close all
 clc
@@ -16,7 +16,7 @@ k = 0.01; %ridge parameter
 w_in = normrnd(0, 0.002, [nReservoirNeurons, N]);
 w = normrnd(0, 2/nReservoirNeurons, [nReservoirNeurons, nReservoirNeurons]);
 
-tTrain = length(xTraining(1,:));
+tTrain = length(xTraining);
 r = zeros(nReservoirNeurons,1);
 R = zeros(nReservoirNeurons,tTrain);
 
@@ -26,13 +26,12 @@ for t = 1:tTrain
     R(:,t) = r;
 end
 
-w_out = xTraining*R'*inv(R*R' + k*eye(nReservoirNeurons));
+w_out = xTraining*R'/(R*R' + k*eye(nReservoirNeurons));
 O_i = LocalField(w_out,r);
 
 
 % Prediction
 tTest = length(xTest);
-%r = zeros(nReservoirNeurons,1);
 
 for t = 1:tTest
     r = tanh(LocalField(w,r) + LocalField(w_in,xTest(:,t)));
@@ -47,4 +46,8 @@ for t = 1:500
     O = LocalField(w_out,r);
 end
 
+
+plot3(xTest(1,:),xTest(2,:),xTest(3,:))
+hold on
+plot3(y(1,:),y(2,:),y(3,:))
 csvwrite("prediction.csv",y(2,:))
