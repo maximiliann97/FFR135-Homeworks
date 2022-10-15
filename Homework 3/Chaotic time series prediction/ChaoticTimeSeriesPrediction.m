@@ -27,7 +27,6 @@ for t = 1:tTrain
 end
 
 w_out = xTraining*R'/(R*R' + k*eye(nReservoirNeurons));
-O_i = LocalField(w_out,r);
 
 
 % Prediction
