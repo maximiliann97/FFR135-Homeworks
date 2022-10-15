@@ -1,7 +1,9 @@
 % Maximilian Salén
 % 19970105-1576
 % Last updated: 2022-10-14
-
+clear all
+close all
+clc
 
 % Load data
 data = load('iris-data.csv');
@@ -26,8 +28,9 @@ for epoch = 1:nEpochs
     for i = 1:nInputs
         randomIndex = randi(nInputs);
         X = data(randomIndex,:);
-        distance = norm(W - X)
-
-
+        distance = zeros(40);
+        for j = 1:length(X) 
+            distance = distance + sqrt(W(:,:,j) - X(j)).^2;
+        end
     end
 end
