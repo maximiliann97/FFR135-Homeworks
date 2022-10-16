@@ -1,6 +1,6 @@
 % Maximilian Salén
 % 19970105-1576
-% Last updated: 2022-10-14
+% Last updated: 2022-10-16 
 clear all
 close all
 clc
@@ -13,7 +13,6 @@ labels = load('iris-labels.csv');
 
 % Initialize
 nEpochs = 10;
-batchSize = 1;
 nInputs = length(data);
 eta = 0.1;    %Initial learning rate
 d_eta = 0.01;   %with decay rate
@@ -22,17 +21,19 @@ d_sigma = 0.1;  %with decay rate
 W = rand(40,40,4);
 W_init = W;
 
-
+% Training
 for epoch = 1:nEpochs
     eta = eta * exp(-d_eta*epoch);
     sigma = sigma * exp(-d_sigma*epoch);
     for input = 1:nInputs
+        
         randomIndex = randi(nInputs);
         X(1,1,:) = data(randomIndex,:);
-        distance = zeros(40);
-        for k = 1:length(X) 
-            distance = distance + sqrt(W(:,:,k) - X(k)).^2;
+        terms = {zeros(40) zeros(40) zeros(40) zeros(40)};
+        for k = 1:length(X)
+            terms{k} = (W(:,:,k) - X(k)).^2;
         end
+        distance = sqrt(terms{1} + terms{2} + terms{3} + terms{4});
         [i_min,j_min]  = find(distance==min(distance(:)));
         r0 = [i_min j_min];
 
@@ -51,3 +52,5 @@ for epoch = 1:nEpochs
     end
 end
 
+
+%% Plot
