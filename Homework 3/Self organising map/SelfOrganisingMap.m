@@ -25,12 +25,21 @@ W = rand(40,40,4);
 for epoch = 1:nEpochs
     eta = eta * exp(-d_eta*epoch);
     sigma = sigma * exp(-d_sigma*epoch);
-    for i = 1:nInputs
+    for input = 1:nInputs
         randomIndex = randi(nInputs);
         X = data(randomIndex,:);
         distance = zeros(40);
-        for j = 1:length(X) 
-            distance = distance + sqrt(W(:,:,j) - X(j)).^2;
+        for k = 1:length(X) 
+            distance = distance + sqrt(W(:,:,k) - X(k)).^2;
+        end
+        [i_min,j_min]  = find(distance==min(distance(:)));
+        
+        for i = 1:height(distance)
+            for j = 1:length(distance)
+                if distance(i_min,j_min) < sigma/3
+                    
+                end
+            end
         end
     end
 end
