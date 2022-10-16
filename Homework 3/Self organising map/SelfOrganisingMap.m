@@ -20,7 +20,6 @@ sigma = 10;   %Initial width of neighbourhood function
 d_sigma = 0.05;  %with decay rate
 W = rand(40,40,4);
 W_init = W;
-outputShape = [40 40];
 
 % Training
 for epoch = 1:nEpochs
@@ -42,8 +41,7 @@ for epoch = 1:nEpochs
             for j = 1:length(distance)
                 r = [i j];
                 distance_r0 = vecnorm(r-r0);
-                
-                if distance_r0 < sigma/3
+                if distance_r0 < 3*sigma
                     h = exp(-(1/2*sigma^2) * distance_r0);
                     dW = eta*h*(X-W(i,j,:));
                     W(i,j,:) = W(i,j,:) + dW;
@@ -52,5 +50,3 @@ for epoch = 1:nEpochs
         end
     end
 end
-
-
