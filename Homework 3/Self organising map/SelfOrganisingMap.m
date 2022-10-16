@@ -7,7 +7,7 @@ clc
 
 % Load data
 data = load('iris-data.csv');
-data = data./max(data); %Normalize
+data = data./max(max(data)); %Normalize
 labels = load('iris-labels.csv');
 
 
@@ -20,6 +20,7 @@ sigma = 10;   %Initial width of neighbourhood function
 d_sigma = 0.1;  %with decay rate
 W = rand(40,40,4);
 W_init = W;
+outputShape = [40 40];
 
 % Training
 for epoch = 1:nEpochs
@@ -53,4 +54,3 @@ for epoch = 1:nEpochs
 end
 
 
-%% Plot
