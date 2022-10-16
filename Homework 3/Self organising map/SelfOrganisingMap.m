@@ -53,7 +53,7 @@ for epoch = 1:nEpochs
             figure(1)
             hold on
             a = normrnd(0,0.02);
-            b = normrnd(0,0.2);
+            b = normrnd(0,0.02);
             i_min = i_min + a;
             j_min = j_min + b;
             scatter(i_min,j_min,'b.')
@@ -61,7 +61,7 @@ for epoch = 1:nEpochs
             figure(2)
             hold on
             a = normrnd(0,0.02);
-            b = normrnd(0,0.2);
+            b = normrnd(0,0.02);
             i_min = i_min + a;
             j_min = j_min + b;
             scatter(i_min,j_min,'r.')
