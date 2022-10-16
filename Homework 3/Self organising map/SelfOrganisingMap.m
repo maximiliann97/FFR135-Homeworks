@@ -48,5 +48,24 @@ for epoch = 1:nEpochs
                 end
             end
         end
+
+        if epoch == 1
+            figure(1)
+            hold on
+            a = normrnd(0,0.02);
+            b = normrnd(0,0.2);
+            i_min = i_min + a;
+            j_min = j_min + b;
+            scatter(i_min,j_min,'b.')
+        elseif epoch == 10
+            figure(2)
+            hold on
+            a = normrnd(0,0.02);
+            b = normrnd(0,0.2);
+            i_min = i_min + a;
+            j_min = j_min + b;
+            scatter(i_min,j_min,'r.')
+        end
+
     end
 end
