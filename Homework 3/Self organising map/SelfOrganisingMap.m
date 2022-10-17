@@ -1,13 +1,13 @@
 % Maximilian Salén
 % 19970105-1576
-% Last updated: 2022-10-16 
+% Last updated: 2022-10-17
 clear all
 close all
 clc
 
 % Load data
 data = load('iris-data.csv');
-data = data./max(max(data)); %Normalize
+data = data./max(data); %Normalize
 labels = load('iris-labels.csv');
 
 
@@ -26,19 +26,17 @@ for epoch = 1:nEpochs
     eta = eta * exp(-d_eta*epoch);
     sigma = sigma * exp(-d_sigma*epoch);
     for input = 1:nInputs
-        
         randomIndex = randi(nInputs);
         X(1,1,:) = data(randomIndex,:);
-        termsInit = {zeros(40) zeros(40) zeros(40) zeros(40)};
         for k = 1:length(X)
-            termsInit{k} = (W(:,:,k) - X(k)).^2;
+            terms{k} = (W(:,:,k) - X(k)).^2;
         end
-        distanceInit = sqrt(termsInit{1} + termsInit{2} + termsInit{3} + termsInit{4});
-        [i_min,j_min]  = find(distanceInit==min(distanceInit(:)));
+        distance = sqrt(terms{1} + terms{2} + terms{3} + terms{4});
+        [i_min,j_min]  = find(distance==min(distance(:)));
         r0 = [i_min j_min];
 
-        for i = 1:height(distanceInit)
-            for j = 1:length(distanceInit)
+        for i = 1:height(distance)
+            for j = 1:length(distance)
                 r = [i j];
                 distance_r0 = vecnorm(r-r0);
                 if distance_r0 < 3*sigma
@@ -53,13 +51,13 @@ end
 
 
 for i = 1:nInputs
-        X(1,1,:) = data(i,:);
+        x(1,1,:) = data(i,:);
     for n = 1:4
-        termsInit{n} = (squeeze(W_init(:,:,n)) - X(n)).^2;
-        termsFinal{n} = (squeeze(W(:,:,n)) - X(n)).^2;
+        termsInit{n} = (W_init(:,:,n) - x(n)).^2;
+        termsFinal{n} = (W(:,:,n) - x(n)).^2;
     end
-        noise = normrnd(0,0.02);
-        noise2 = normrnd(0,0.02);
+        noise = normrnd(0, 0.05);
+        noise2 = normrnd(0, 0.05);
         distanceInit = sqrt(termsInit{1} + termsInit{2} + termsInit{3} + termsInit{4});
         [i_min,j_min]  = find(distanceInit==min(distanceInit(:)));
         initWinning_i(i) = i_min + noise;
@@ -71,7 +69,17 @@ for i = 1:nInputs
         finalWinning_j(i) = j_minF + noise2;
 end
 
-figure(1)
-scatter(initWinning_i,initWinning_j,'b.')
-figure(2)
-scatter(finalWinning_i,finalWinning_j,'r.')
+
+subplot(2,1,1)
+hold on
+scatter(initWinning_i(1:50),initWinning_j(1:50),40,'red','filled','o')
+scatter(initWinning_i(51:100),initWinning_j(51:100),40,'g','filled','o')
+scatter(initWinning_i(101:150),initWinning_j(101:150),40,'b','filled','o')
+legend('Iris Setosa','Iris Versicolour','Iris Virginica')
+
+subplot(2,1,2)
+hold on
+scatter(finalWinning_i(1:50),finalWinning_j(1:50),40,'r','filled','o')
+scatter(finalWinning_i(51:100),finalWinning_j(51:100),40,'g','filled','o')
+scatter(finalWinning_i(101:150),finalWinning_j(101:150),40,'b','filled','o')
+legend('Iris Setosa','Iris Versicolour','Iris Virginica')
