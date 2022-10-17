@@ -29,16 +29,16 @@ for epoch = 1:nEpochs
         
         randomIndex = randi(nInputs);
         X(1,1,:) = data(randomIndex,:);
-        terms = {zeros(40) zeros(40) zeros(40) zeros(40)};
+        termsInit = {zeros(40) zeros(40) zeros(40) zeros(40)};
         for k = 1:length(X)
-            terms{k} = (W(:,:,k) - X(k)).^2;
+            termsInit{k} = (W(:,:,k) - X(k)).^2;
         end
-        distance = sqrt(terms{1} + terms{2} + terms{3} + terms{4});
-        [i_min,j_min]  = find(distance==min(distance(:)));
+        distanceInit = sqrt(termsInit{1} + termsInit{2} + termsInit{3} + termsInit{4});
+        [i_min,j_min]  = find(distanceInit==min(distanceInit(:)));
         r0 = [i_min j_min];
 
-        for i = 1:height(distance)
-            for j = 1:length(distance)
+        for i = 1:height(distanceInit)
+            for j = 1:length(distanceInit)
                 r = [i j];
                 distance_r0 = vecnorm(r-r0);
                 if distance_r0 < 3*sigma
@@ -48,24 +48,30 @@ for epoch = 1:nEpochs
                 end
             end
         end
-
-        if epoch == 1
-            figure(1)
-            hold on
-            a = normrnd(0,0.02);
-            b = normrnd(0,0.02);
-            i_min = i_min + a;
-            j_min = j_min + b;
-            scatter(i_min,j_min,'b.')
-        elseif epoch == 10
-            figure(2)
-            hold on
-            a = normrnd(0,0.02);
-            b = normrnd(0,0.02);
-            i_min = i_min + a;
-            j_min = j_min + b;
-            scatter(i_min,j_min,'r.')
-        end
-
     end
 end
+
+
+for i = 1:nInputs
+        X(1,1,:) = data(i,:);
+    for n = 1:4
+        termsInit{n} = (squeeze(W_init(:,:,n)) - X(n)).^2;
+        termsFinal{n} = (squeeze(W(:,:,n)) - X(n)).^2;
+    end
+        noise = normrnd(0,0.02);
+        noise2 = normrnd(0,0.02);
+        distanceInit = sqrt(termsInit{1} + termsInit{2} + termsInit{3} + termsInit{4});
+        [i_min,j_min]  = find(distanceInit==min(distanceInit(:)));
+        initWinning_i(i) = i_min + noise;
+        initWinning_j(i) = j_min + noise2;
+
+        distanceFinal = sqrt(termsFinal{1} + termsFinal{2} + termsFinal{3} + termsFinal{4});
+        [i_minF,j_minF]  = find(distanceFinal==min(distanceFinal(:)));
+        finalWinning_i(i) = i_minF +  noise;
+        finalWinning_j(i) = j_minF + noise2;
+end
+
+figure(1)
+scatter(initWinning_i,initWinning_j,'b.')
+figure(2)
+scatter(finalWinning_i,finalWinning_j,'r.')
