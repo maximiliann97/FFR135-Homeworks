@@ -18,7 +18,7 @@ eta = 0.1;    %Initial learning rate
 d_eta = 0.01;   %with decay rate
 sigma = 10;   %Initial width of neighbourhood function
 d_sigma = 0.05;  %with decay rate
-W = rand(40,40,4);
+W = rand([40,40,4]);
 W_init = W;
 
 % Training
@@ -28,20 +28,22 @@ for epoch = 1:nEpochs
     for input = 1:nInputs
         randomIndex = randi(nInputs);
         X(1,1,:) = data(randomIndex,:);
+        terms = {zeros(40) zeros(40) zeros(40) zeros(40)};
         for k = 1:length(X)
             terms{k} = (W(:,:,k) - X(k)).^2;
         end
         distance = sqrt(terms{1} + terms{2} + terms{3} + terms{4});
+
+        % Updating weights
         [i_min,j_min]  = find(distance==min(distance(:)));
         r0 = [i_min j_min];
-
         for i = 1:height(distance)
             for j = 1:length(distance)
                 r = [i j];
                 distance_r0 = vecnorm(r-r0);
                 if distance_r0 < 3*sigma
-                    h = exp(-(1/2*sigma^2) * distance_r0);
-                    dW = eta*h*(X-W(i,j,:));
+                    h = Neighbourhood(r,r0,sigma);
+                    dW = DeltaW(eta,h,X,W(i,j,:));
                     W(i,j,:) = W(i,j,:) + dW;
                 end
             end
@@ -51,17 +53,17 @@ end
 
 
 for i = 1:nInputs
-        x(1,1,:) = data(i,:);
+        input = data(i,:);
     for n = 1:4
-        termsInit{n} = (W_init(:,:,n) - x(n)).^2;
-        termsFinal{n} = (W(:,:,n) - x(n)).^2;
+        termsInit{n} = (W_init(:,:,n) - input(n)).^2;
+        termsFinal{n} = (W(:,:,n) - input(n)).^2;
     end
         noise = normrnd(0, 0.05);
         noise2 = normrnd(0, 0.05);
         distanceInit = sqrt(termsInit{1} + termsInit{2} + termsInit{3} + termsInit{4});
-        [i_min,j_min]  = find(distanceInit==min(distanceInit(:)));
-        initWinning_i(i) = i_min + noise;
-        initWinning_j(i) = j_min + noise2;
+        [i_minI,j_minI]  = find(distanceInit==min(distanceInit(:)));
+        initWinning_i(i) = i_minI + noise;
+        initWinning_j(i) = j_minI + noise2;
 
         distanceFinal = sqrt(termsFinal{1} + termsFinal{2} + termsFinal{3} + termsFinal{4});
         [i_minF,j_minF]  = find(distanceFinal==min(distanceFinal(:)));
@@ -76,6 +78,7 @@ scatter(initWinning_i(1:50),initWinning_j(1:50),40,'red','filled','o')
 scatter(initWinning_i(51:100),initWinning_j(51:100),40,'g','filled','o')
 scatter(initWinning_i(101:150),initWinning_j(101:150),40,'b','filled','o')
 legend('Iris Setosa','Iris Versicolour','Iris Virginica')
+title('Winning neuron positions with initial weights')
 
 subplot(2,1,2)
 hold on
@@ -83,3 +86,4 @@ scatter(finalWinning_i(1:50),finalWinning_j(1:50),40,'r','filled','o')
 scatter(finalWinning_i(51:100),finalWinning_j(51:100),40,'g','filled','o')
 scatter(finalWinning_i(101:150),finalWinning_j(101:150),40,'b','filled','o')
 legend('Iris Setosa','Iris Versicolour','Iris Virginica')
+title('Winning neuron positions with trained weights')
