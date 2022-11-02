@@ -20,6 +20,7 @@ sigma = 10;   %Initial width of neighbourhood function
 d_sigma = 0.05;  %with decay rate
 W = rand([40,40,4]);
 W_init = W;
+terms = {zeros(40) zeros(40) zeros(40) zeros(40)};
 
 % Training
 for epoch = 1:nEpochs
@@ -28,7 +29,7 @@ for epoch = 1:nEpochs
     for input = 1:nInputs
         randomIndex = randi(nInputs);
         X(1,1,:) = data(randomIndex,:);
-        terms = {zeros(40) zeros(40) zeros(40) zeros(40)};
+
         for k = 1:length(X)
             terms{k} = (W(:,:,k) - X(k)).^2;
         end
@@ -52,26 +53,36 @@ for epoch = 1:nEpochs
 end
 
 
+%Initialize for output
+termsInit = {zeros(40) zeros(40) zeros(40) zeros(40)};
+termsFinal = {zeros(40) zeros(40) zeros(40) zeros(40)};
+initWinning_i = zeros(1,150);
+initWinning_j = zeros(1,150);
+finalWinning_i = zeros(1,150);
+finalWinning_j = zeros(1,150);
+
+% Get the output
 for i = 1:nInputs
         input = data(i,:);
-    for n = 1:4
+    for n = 1:length(input)
         termsInit{n} = (W_init(:,:,n) - input(n)).^2;
         termsFinal{n} = (W(:,:,n) - input(n)).^2;
     end
-        noise = normrnd(0, 0.05);
-        noise2 = normrnd(0, 0.05);
+        noise = normrnd(0, 0.02);
+        noise2 = normrnd(0, 0.02);
         distanceInit = sqrt(termsInit{1} + termsInit{2} + termsInit{3} + termsInit{4});
         [i_minI,j_minI]  = find(distanceInit==min(distanceInit(:)));
         initWinning_i(i) = i_minI + noise;
         initWinning_j(i) = j_minI + noise2;
 
-        distanceFinal = sqrt(termsFinal{1} + termsFinal{2} + termsFinal{3} + termsFinal{4});
+        distanceFinal = sqrt(termsFinal{1} + termsFinal{2} + termsFinal{3} ...
+            + termsFinal{4});
         [i_minF,j_minF]  = find(distanceFinal==min(distanceFinal(:)));
-        finalWinning_i(i) = i_minF +  noise;
+        finalWinning_i(i) = i_minF + noise;
         finalWinning_j(i) = j_minF + noise2;
 end
 
-
+% Plot
 subplot(2,1,1)
 hold on
 scatter(initWinning_i(1:50),initWinning_j(1:50),40,'red','filled','o')
