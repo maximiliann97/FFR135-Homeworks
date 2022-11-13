@@ -7,8 +7,6 @@ dimensions = [2 3 4 5];
 nTrials = 1e4;
 nEpochs = 20;
 eta = 0.05;
-
-
 for k = 1:length(dimensions)
     n = dimensions(k);
     booleanInputs = dec2bin(0:2^n-1)' - '0';
